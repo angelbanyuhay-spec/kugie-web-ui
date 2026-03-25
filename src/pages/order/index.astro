@@ -1,0 +1,8 @@
+---
+import LandingLayout from '../../layouts/LandingLayout.astro';
+import OrderForm from './_components/OrderForm';
+---
+
+<LandingLayout title="Order — Kugiebites" description="Build your order and get it delivered fresh.">
+  <OrderForm client:load />
+</LandingLayout>

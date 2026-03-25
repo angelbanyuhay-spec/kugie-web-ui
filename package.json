@@ -1,0 +1,30 @@
+{
+  "name": "kugie-web-ui",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "deploy": "astro build && wrangler deploy --no-x-autoconfig",
+    "astro": "astro",
+    "clean": "npx --yes rimraf node_modules"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.0",
+    "@astrojs/tailwind": "^5.1.2",
+    "@supabase/supabase-js": "^2.99.2",
+    "astro": "^5.0.9",
+    "lucide-react": "^0.460.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@astrojs/cloudflare": "^12.6.0",
+    "@astrojs/react": "^4.0.0",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.32",
+    "tailwindcss": "^3.4.0",
+    "wrangler": "^4.61.1"
+  }
+}

@@ -1,0 +1,369 @@
+---
+import HomeLayout from '../../layouts/HomeLayout.astro';
+import { VISIT_US_CONTENT } from '../../data/visit-us-data';
+
+const contactStatus = Astro.url.searchParams.get('contact');
+---
+
+<HomeLayout title="Contact - Kugiebites" description="Have a question or want to book a visit? We'd love to hear from you.">
+  <main class="contact-page">
+    <div class="bg-paw paw-left" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M8.5 6.5C8.5 7.88071 7.38071 9 6 9C4.61929 9 3.5 7.88071 3.5 6.5C3.5 5.11929 4.61929 4 6 4C7.38071 4 8.5 5.11929 8.5 6.5Z" />
+        <path d="M15.5 3.5C15.5 4.88071 14.3807 6 13 6C11.6193 6 10.5 4.88071 10.5 3.5C10.5 2.11929 11.6193 1 13 1C14.3807 1 15.5 2.11929 15.5 3.5Z" />
+        <path d="M21 7.5C21 8.88071 19.8807 10 18.5 10C17.1193 10 16 8.88071 16 7.5C16 6.11929 17.1193 5 18.5 5C19.8807 5 21 6.11929 21 7.5Z" />
+        <path d="M12.5 23C16.6421 23 20 19.6421 20 15.5C20 12.5 17.5 10 14.5 10C13.5 10 12.5 10.5 12.5 10.5C12.5 10.5 11.5 10 10.5 10C7.5 10 5 12.5 5 15.5C5 19.6421 8.35786 23 12.5 23Z" />
+      </svg>
+    </div>
+
+    <div class="container">
+      <header class="contact-header">
+        <h1 class="section-title">Get in Touch</h1>
+        <p class="section-intro">Have a question or want to book a visit? We'd love to hear from you and your furry friends!</p>
+      </header>
+
+      <div class="contact-grid">
+        <section class="form-container">
+          <h2 id="contact-form" class="sr-only">Contact form</h2>
+          {
+            contactStatus === 'success' && (
+              <div class="form-alert form-alert-success" role="status" aria-live="polite">
+                Thanks! Your message has been sent. We’ll get back to you soon.
+              </div>
+            )
+          }
+          {
+            contactStatus === 'error' && (
+              <div class="form-alert form-alert-error" role="alert">
+                Something went wrong. Please try again.
+              </div>
+            )
+          }
+          <form class="contact-form" id="contact-form">
+            <input class="hp-field" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
+            <div class="input-group">
+              <label for="contact-name">Your Name</label>
+              <input type="text" id="contact-name" name="name" placeholder="John Doe" required />
+            </div>
+            
+            <div class="input-group">
+              <label for="contact-email">Email Address</label>
+              <input type="email" id="contact-email" name="email" placeholder="hello@example.com" required />
+            </div>
+
+            <div class="input-group">
+              <label for="contact-subject">Subject</label>
+              <select id="contact-subject" name="subject">
+                <option value="general">General Inquiry</option>
+                <option value="appointment">Booking an Appointment</option>
+                <option value="feedback">Feedback</option>
+              </select>
+            </div>
+
+            <div class="input-group">
+              <label for="contact-message">Message</label>
+              <textarea id="contact-message" name="message" rows="5" placeholder="Tell us how we can help..." required></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn" id="contact-submit-btn">Send Message</button>
+          </form>
+
+          <script>
+            import supabase from '../../lib/supabase/client';
+
+            const form = document.getElementById('contact-form') as HTMLFormElement;
+            const submitBtn = document.getElementById('contact-submit-btn') as HTMLButtonElement;
+
+            form?.addEventListener('submit', async (e) => {
+              e.preventDefault();
+
+              const fd = new FormData(form);
+              if (fd.get('website')) return;
+
+              const name = (fd.get('name') as string)?.trim();
+              const email = (fd.get('email') as string)?.trim();
+              const subject = (fd.get('subject') as string)?.trim() || 'general';
+              const message = (fd.get('message') as string)?.trim();
+
+              if (!name || !email || !message) {
+                showContactAlert('error');
+                return;
+              }
+
+              submitBtn.disabled = true;
+              submitBtn.textContent = 'Sending…';
+
+              try {
+                const { error } = await supabase.from('contact_messages').insert({
+                  name,
+                  email,
+                  subject,
+                  message,
+                  status: 'new',
+                  source_page: window.location.pathname,
+                  user_agent: navigator.userAgent,
+                });
+
+                if (error) throw error;
+                form.reset();
+                showContactAlert('success');
+              } catch {
+                showContactAlert('error');
+              } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Send Message';
+              }
+            });
+
+            function showContactAlert(type: 'success' | 'error') {
+              const container = form.closest('.form-container');
+              container?.querySelectorAll('.form-alert').forEach((el) => el.remove());
+
+              const div = document.createElement('div');
+              div.className = `form-alert form-alert-${type}`;
+              div.setAttribute('role', type === 'success' ? 'status' : 'alert');
+              div.textContent =
+                type === 'success'
+                  ? "Thanks! Your message has been sent. We'll get back to you soon."
+                  : 'Something went wrong. Please try again.';
+
+              form.parentElement?.insertBefore(div, form);
+              div.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+              if (type === 'success') {
+                setTimeout(() => div.remove(), 8000);
+              }
+            }
+          </script>
+        </section>
+
+        <aside class="info-container">
+          <h2 class="info-heading">Our Locations</h2>
+          <div class="branches-stack">
+            {VISIT_US_CONTENT.branches.map((branch) => (
+              <div class="mini-branch-card">
+                <h3 class="branch-name-small">{branch.name}</h3>
+                <p class="branch-detail">{branch.address}</p>
+                <p class="branch-detail"><strong>Phone:</strong> {branch.phone}</p>
+                <p class="branch-detail"><strong>Hours:</strong> {branch.hours}</p>
+              </div>
+            ))}
+          </div>
+        </aside>
+      </div>
+    </div>
+  </main>
+</HomeLayout>
+
+<style>
+  :root {
+    --color-bg-cream: #ebcc8f;
+    --color-text-green: #f49d03;
+    --color-text-gold: #c8994f;
+    --color-paw-print: #e0d6b8;
+    --color-white: #ffffff;
+  }
+
+  .contact-page {
+    position: relative;
+    background-color: var(--color-bg-cream);
+    padding: 6rem 1.5rem;
+    font-family: 'Montserrat', sans-serif;
+    overflow: hidden;
+    min-height: 100vh;
+  }
+
+  .container {
+    position: relative;
+    z-index: 2;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  /* BACKGROUND PAW PRINTS */
+  .bg-paw {
+    position: absolute;
+    color: var(--color-paw-print);
+    z-index: 1;
+    opacity: 0.6;
+  }
+  .paw-left { bottom: -20px; left: -50px; width: 300px; transform: rotate(-15deg); }
+
+  /* HEADER */
+  .contact-header {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+
+  .section-title {
+    font-family: 'Calistoga', serif;
+    font-size: clamp(3rem, 6vw, 4rem);
+    color: var(--color-text-green);
+    margin-bottom: 1rem;
+  }
+
+  .section-intro {
+    font-size: 1.2rem;
+    color: var(--color-text-green);
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* GRID LAYOUT */
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  @media (min-width: 900px) {
+    .contact-grid {
+      grid-template-columns: 1.5fr 1fr;
+    }
+  }
+
+  /* FORM STYLES */
+  .form-container {
+    background: var(--color-white);
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(10, 68, 30, 0.08);
+  }
+
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .hp-field {
+    position: absolute;
+    left: -9999px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .form-alert {
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    margin: 0 0 1.5rem 0;
+    font-weight: 700;
+    line-height: 1.4;
+  }
+
+  .form-alert-success {
+    background: rgba(10, 68, 30, 0.08);
+    border: 2px solid rgba(10, 68, 30, 0.25);
+    color: var(--color-text-green);
+  }
+
+  .form-alert-error {
+    background: rgba(187, 147, 19, 0.18);
+    border: 2px solid rgba(187, 147, 19, 0.4);
+    color: var(--color-text-green);
+  }
+
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .input-group label {
+    font-weight: 700;
+    color: var(--color-text-green);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .input-group input, 
+  .input-group select, 
+  .input-group textarea {
+    padding: 1rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+  }
+
+  .input-group input:focus, 
+  .input-group textarea:focus {
+    outline: none;
+    border-color: var(--color-text-gold);
+  }
+
+  .submit-btn {
+    background-color: var(--color-text-green);
+    color: white;
+    padding: 1.2rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+  }
+
+  .submit-btn:hover {
+    background-color: var(--color-text-gold);
+    transform: translateY(-2px);
+  }
+
+  /* INFO / BRANCHES STYLES */
+  .info-heading {
+    font-family: 'Calistoga', serif;
+    color: var(--color-text-green);
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .branches-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .mini-branch-card {
+    border-left: 4px solid var(--color-text-gold);
+    padding-left: 1.5rem;
+  }
+
+  .branch-name-small {
+    color: var(--color-text-gold);
+    text-transform: uppercase;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+  }
+
+  .branch-detail {
+    color: var(--color-text-green);
+    line-height: 1.5;
+    margin: 0.2rem 0;
+    white-space: pre-line;
+  }
+
+  @media (max-width: 600px) {
+    .contact-page { padding: 4rem 1rem; }
+    .form-container { padding: 1.5rem; }
+    .bg-paw { display: none; }
+  }
+</style>
+

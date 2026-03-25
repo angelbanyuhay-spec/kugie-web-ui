@@ -1,0 +1,44 @@
+---
+import { LOGO_URL, COLORS, QUICK_LINKS } from '../../constants';
+---
+
+<footer class="footer-section text-white pt-12 pb-8" style={{ backgroundColor: COLORS.green, fontFamily: "'Montserrat', sans-serif" }}>
+  <div class="container mx-auto px-4 lg:px-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 mb-10">
+      <div>
+        <h3 class="text-xl font-bold mb-4 flex items-center gap-2 text-white">
+          <img src={LOGO_URL} alt="Kugiebites" class="h-10 w-auto" />
+          Kugiebites
+        </h3>
+        <p class="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.9)' }}>
+          Fresh snacks, burgers, fries, and sulit combos — happiness in every bite.
+        </p>
+      </div>
+      <div>
+        <h4 class="text-sm font-bold mb-4 uppercase tracking-wide" style={{ color: COLORS.yellow }}>Quick Links</h4>
+        <ul class="space-y-2" style={{ color: 'rgba(255,255,255,0.9)' }}>
+          {QUICK_LINKS.map((item) => (
+            <li>
+              <a href={item.href} class="hover:text-white transition-colors">{item.name}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-sm font-bold mb-4 uppercase tracking-wide" style={{ color: COLORS.yellow }}>Contact</h4>
+        <p class="text-sm" style={{ color: 'rgba(255,255,255,0.9)' }}>Call, email, or message us for orders and delivery.</p>
+      </div>
+    </div>
+    <div class="pt-6 text-center text-sm" style={{ borderColor: 'rgba(255,255,255,0.3)', borderTopWidth: '1px', color: 'rgba(255,255,255,0.8)' }}>
+      &copy; 2026 KugieBites. All rights reserved.
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer-section,
+  .footer-section h3,
+  .footer-section h4 {
+    font-family: 'Montserrat', sans-serif;
+  }
+</style>

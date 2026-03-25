@@ -1,0 +1,23 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const {
+  title,
+  description = 'Kugiebites — fresh snacks, burgers, and combos.',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={title} description={description} />
+  </head>
+  <body class="m-0 min-h-screen antialiased">
+    <slot />
+  </body>
+</html>

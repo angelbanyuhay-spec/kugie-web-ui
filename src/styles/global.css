@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --accent: #2658B2;
+  --accent-dark: #052049;
+  --black: 15, 18, 25;
+  --gray: 96, 115, 159;
+  --gray-light: 229, 233, 240;
+}
+
+body {
+  font-family: "Montserrat", sans-serif;
+  margin: 0;
+  padding: 0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+}
+
+main {
+  width: 100%;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Calistoga", serif;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.35;
+  letter-spacing: 0.02em;
+}
+
+a:hover {
+  opacity: 0.9;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}

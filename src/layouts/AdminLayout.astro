@@ -1,0 +1,25 @@
+---
+import NavSection from '../pages/home/_components/nav/NavSection';
+import BaseHead from '../components/BaseHead.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = 'Kugiebites admin dashboard' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={title} description={description} />
+  </head>
+  <body class="min-h-screen bg-gray-50 text-gray-900 font-sans">
+    <NavSection />
+    <main>
+      <slot />
+    </main>
+  </body>
+</html>
+

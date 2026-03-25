@@ -1,0 +1,14 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title = 'Home - Kugiebites', description = 'Fresh snacks, burgers, and combos — delight in every bite.' } = Astro.props;
+---
+
+<BaseLayout title={title} description={description}>
+  <slot />
+</BaseLayout>

@@ -1,0 +1,96 @@
+---
+import { NAV_LINKS, LOGO_URL, COLORS } from '../../constants';
+import Button from '../ui/Button.astro';
+
+const currentPath = Astro.url.pathname;
+---
+
+<nav class="sticky top-0 z-50 bg-white shadow-md font-sans animate-slide-down">
+  <div class="container mx-auto px-4 lg:px-8">
+    <div class="flex justify-between items-center h-20">
+      <a href="/" class="flex items-center gap-2 sm:gap-3 cursor-pointer">
+        <img src={LOGO_URL} alt="Kugiebites" class="h-12 w-auto" />
+        <span class="sm:hidden -ml-1 text-xs font-extrabold leading-tight tracking-wide uppercase" style={{ color: COLORS.green }}>
+          <span class="block">Kugie</span>
+          <span class="block">bites</span>
+        </span>
+        <span class="hidden sm:block text-lg font-bold whitespace-nowrap" style={{ color: COLORS.green }}>Kugiebites</span>
+      </a>
+
+      <div class="hidden lg:flex items-center gap-1">
+        {NAV_LINKS.map((link) => {
+          const isActive = currentPath === link.href || (link.href !== '/' && currentPath.startsWith(link.href));
+          return (
+            <a
+              href={link.href}
+              class={`px-4 py-2 text-sm font-semibold rounded-md whitespace-nowrap transition-all duration-200 ${
+                isActive
+                  ? 'text-kugie-primary'
+                  : 'text-gray-600 hover:text-kugie-primary hover:bg-gray-50 hover:-translate-y-[1px]'
+              }`}
+            >
+              {link.name}
+            </a>
+          );
+        })}
+        <div class="ml-4">
+          <Button variant="primary" href="/#order" className="shadow-md gap-2" style={{ backgroundColor: COLORS.green, color: 'white' }}>
+            Order Now
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H19m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+          </Button>
+        </div>
+      </div>
+
+      <button id="mobile-menu-button" class="lg:hidden p-2 text-gray-600" aria-label="Toggle menu" type="button">
+        <svg id="menu-icon" class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+        <svg id="close-icon" class="w-7 h-7 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div id="mobile-menu" class="lg:hidden bg-white border-t border-gray-100 hidden w-full shadow-lg">
+    <div class="px-4 py-4 space-y-1">
+      {NAV_LINKS.map((link) => (
+        <a
+          href={link.href}
+          class={`block px-4 py-3 text-base font-medium rounded-lg transition-all duration-200 ${
+            currentPath === link.href
+              ? 'text-kugie-primary bg-gray-50 border border-gray-100'
+              : 'text-gray-700 hover:bg-gray-100 hover:-translate-y-[1px]'
+          }`}
+        >
+          {link.name}
+        </a>
+      ))}
+      <div class="pt-4">
+        <Button variant="primary" href="/#order" className="w-full gap-2" style={{ backgroundColor: COLORS.green, color: 'white' }}>
+          Order Now
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H19m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+        </Button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<script>
+  const menuButton = document.getElementById('mobile-menu-button');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const menuIcon = document.getElementById('menu-icon');
+  const closeIcon = document.getElementById('close-icon');
+
+  if (menuButton && mobileMenu && menuIcon && closeIcon) {
+    menuButton.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+      menuIcon.classList.toggle('hidden');
+      closeIcon.classList.toggle('hidden');
+    });
+  }
+</script>
