@@ -10,7 +10,7 @@ jobs:
     env:
       SUPABASE_URL: https://vtddlqtxguyxwgduvqpr.supabase.co
       SUPABASE_SERVICE_ROLE_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ0ZGRscXR4Z3V5eHdnZHV2cXByIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NDQwODUwOCwiZXhwIjoyMDg5OTg0NTA4fQ.2SBGZARyklBfV98mrmGiIQQcAoUEmBqZHtTlzx8zSNA
-
+      CLOUDFLARE_API_TOKEN: cfut_DVkQ23RpDwzIcNROdSZb6t6tWs5hujq1Y2eNYO0g03696c4d
     steps:
       - uses: actions/checkout@v4
 
